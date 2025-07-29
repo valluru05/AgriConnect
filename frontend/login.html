@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | AgriConnect</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-green-50 flex flex-col min-h-screen" style="background-image: url('bg1.jpeg'); background-size: cover; background-position: center;">
+  <!-- Navbar -->
+  <nav class="bg-green-700 text-white shadow">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center py-4 px-4 sm:px-6">
+      <div class="flex items-center mb-2 sm:mb-0">
+        <img src="icon.jpg" alt="Leaf Icon" class="h-10 w-10 mr-2 rounded-full" />
+        <span class="text-2xl font-bold tracking-wide">AgriConnect</span>
+      </div>
+      <ul class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-lg items-center">
+        <li><a href="index.html" class="hover:text-yellow-300 transition">Home</a></li>
+        <li><a href="login.html" class="hover:text-yellow-300 transition">Farmers</a></li>
+        <li><a href="login.html" class="hover:text-yellow-300 transition">Consumers</a></li>
+        <li><a href="about.html" class="hover:text-yellow-300 transition">About</a></li>
+        <li><a href="contact.html" class="hover:text-yellow-300 transition">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Login Section and Main Wrapper -->
+  <div style="position:relative;">
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.4); z-index:0;"></div>
+    <div class="flex flex-col items-center justify-center mt-8 mb-6" style="position:relative; z-index:1;">
+      <div class="flex items-center mb-2">
+        <img src="icon.jpg" alt="Logo" class="h-10 w-10 mr-2 rounded-full" />
+        <span class="text-2xl font-extrabold text-green-900">AgriConnect</span>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-green-900 mb-2">Welcome</h2>
+      <p class="text-lg text-green-800">Join our farming community</p>
+    </div>
+    <main class="flex-1 flex items-center justify-center px-2" style="position:relative; z-index:1;">
+      <form class="bg-white bg-opacity-90 rounded-lg p-4 sm:p-8 max-w-xs sm:max-w-md mx-auto shadow-lg mt-10 mb-12 w-full z-10 relative" id="loginForm" style="position:relative; z-index:1;">
+        <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6 text-center">Login</h2>
+      <div class="mb-4">
+        <label class="block text-green-900 mb-2" for="email">Email</label>
+        <input class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400" type="email" id="email" name="email" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-green-900 mb-2" for="password">Password</label>
+        <input class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400" type="password" id="password" name="password" required>
+      </div>
+      <div class="mb-4 text-right">
+        <a href="#" id="forgotPasswordLink" class="text-green-700 hover:underline text-sm">Forgot Password?</a>
+      </div>
+      <div class="mb-6">
+        <label class="block text-green-900 mb-2" for="role">Role</label>
+        <select class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400" id="role" name="role" required>
+          <option value="">Select Role</option>
+          <option value="farmer">Farmer</option>
+          <option value="consumer">Consumer</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="gradient-btn w-full py-3 text-lg mb-4">Login</button>
+      <p class="mt-4 text-center text-green-900">Don't have an account? <a href="register.html" class="text-green-700 hover:underline">Register</a></p>
+    </form>
+  </main>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-md relative">
+      <button id="closeForgotPasswordModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+      <h3 class="text-2xl font-bold text-green-800 mb-4">Reset Password</h3>
+      <form id="forgotPasswordForm">
+        <label class="block text-green-900 mb-2" for="forgotEmail">Enter your email address</label>
+        <input class="w-full px-4 py-2 border rounded mb-4" type="email" id="forgotEmail" required>
+        <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg">Send Reset Link</button>
+      </form>
+    </div>
+  </div>
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-8 right-8 bg-green-700 text-white px-6 py-3 rounded shadow-lg z-50 hidden"></div>
+
+  <!-- Footer -->
+  <footer class="bg-green-800 text-white text-center py-4 mt-auto text-sm sm:text-base relative z-0">
+    © 2025 AgriConnect. All rights reserved.
+  </footer>
+  <script>
+    function showToast(msg, color = 'bg-green-700') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `fixed bottom-8 right-8 ${color} text-white px-6 py-3 rounded shadow-lg z-50`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2000);
+    }
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        email: form.email.value,
+        password: form.password.value,
+        role: form.role.value
+      };
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (res.ok) {
+          localStorage.setItem('token', result.token);
+          if (result.user.role === 'farmer') {
+            window.location.href = 'farmer-dashboard.html';
+          } else if (result.user.role === 'consumer') {
+            window.location.href = 'consumer-dashboard.html';
+          } else if (result.user.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+          }
+        } else {
+          showToast(result.message || 'Login failed', 'bg-red-600');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'bg-red-600');
+      }
+    });
+    // Forgot Password logic
+    document.getElementById('forgotPasswordLink').onclick = function(e) {
+      e.preventDefault();
+      document.getElementById('forgotPasswordModal').classList.remove('hidden');
+      document.getElementById('forgotPasswordModal').classList.add('flex');
+    };
+    document.getElementById('closeForgotPasswordModal').onclick = function() {
+      document.getElementById('forgotPasswordModal').classList.add('hidden');
+      document.getElementById('forgotPasswordModal').classList.remove('flex');
+    };
+    document.getElementById('forgotPasswordForm').onsubmit = function(e) {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      if (!email) {
+        showToast('Please enter your email.', 'bg-red-600');
+        return;
+      }
+      // Placeholder for backend integration
+      showToast('If this email is registered, a reset link will be sent.', 'bg-green-700');
+      document.getElementById('forgotPasswordModal').classList.add('hidden');
+      document.getElementById('forgotPasswordModal').classList.remove('flex');
+    };
+  </script>
+</body>
+</html> 

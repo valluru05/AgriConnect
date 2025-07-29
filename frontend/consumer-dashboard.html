@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consumer Dashboard | AgriConnect</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-green-50 min-h-screen">
+  <!-- Navbar -->
+  <nav class="bg-green-700 text-white shadow">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center py-4 px-4 sm:px-6">
+      <div class="flex items-center mb-2 sm:mb-0">
+        <img src="icon.jpg" alt="Leaf Icon" class="h-10 w-10 mr-2 rounded-full" />
+        <span class="text-2xl font-bold tracking-wide">AgriConnect</span>
+      </div>
+      <ul class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-lg items-center">
+        <li><a href="index.html" class="hover:text-yellow-300 transition">Home</a></li>
+        <li><a href="login.html" class="hover:text-yellow-300 transition">Farmers</a></li>
+        <li><a href="consumer-dashboard.html" class="text-yellow-300 font-semibold">Consumers</a></li>
+        <li><a href="about.html" class="hover:text-yellow-300 transition">About</a></li>
+        <li><a href="contact.html" class="hover:text-yellow-300 transition">Contact</a></li>
+        <li><button id="logoutBtn" class="ml-0 sm:ml-4 bg-yellow-400 hover:bg-green-700 hover:text-white text-green-900 px-4 py-2 rounded transition">Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Dashboard Section -->
+  <main class="flex-1 container mx-auto px-2 sm:px-4 py-8">
+    <h2 id="welcomeHeader" class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">Welcome, Consumer!</h2>
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow p-6 text-center">
+        <div class="text-2xl font-bold text-green-700 summary-orders">5</div>
+        <div class="text-green-900">Total Orders</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6 text-center">
+        <div class="text-2xl font-bold text-green-700 summary-spent">₹2,500</div>
+        <div class="text-green-900">Total Spent</div>
+      </div>
+    </div>
+    <!-- Browse Crops -->
+    <section class="mb-10">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-2xl font-semibold text-green-800">Browse Crops</h3>
+        <input type="text" placeholder="Search crops..." class="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400">
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-green-100 text-green-900">
+              <th class="py-2 px-4">Name</th>
+              <th class="py-2 px-4">Farmer</th>
+              <th class="py-2 px-4">Price</th>
+              <th class="py-2 px-4">Location</th>
+              <th class="py-2 px-4">Action</th>
+            </tr>
+          </thead>
+          <tbody id="cropsTableBody">
+            <!-- Crops will be loaded here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Order History Section -->
+    <section>
+      <h3 class="text-2xl font-semibold text-green-800 mb-4">Order History</h3>
+      <div class="overflow-x-auto mb-4">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-green-100 text-green-900">
+              <th class="py-2 px-4">Date</th>
+              <th class="py-2 px-4">Crops</th>
+              <th class="py-2 px-4">Farmer</th>
+              <th class="py-2 px-4">Total</th>
+              <th class="py-2 px-4">Status</th>
+              <th class="py-2 px-4">Pickup Status</th>
+              <th class="py-2 px-4">Invoice</th>
+              <th class="py-2 px-4">Review</th>
+            </tr>
+          </thead>
+          <tbody id="orderHistoryTableBody">
+            <!-- Data will be loaded here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-800 text-white text-center py-4 mt-auto text-sm sm:text-base">
+    © 2025 AgriConnect. All rights reserved.
+  </footer>
+  <!-- Cart Sidebar (enhanced) -->
+  <div id="cartSidebar" class="fixed right-0 top-0 h-full w-80 bg-white shadow-lg border-l border-green-200 p-6 z-50 hidden flex-col">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-2xl font-bold text-green-800">Cart</h3>
+      <button id="closeCart" class="text-green-700 text-xl">&times;</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="mt-4 mb-2 text-lg text-green-900 font-semibold flex justify-between">
+      <span>Total:</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+    <button id="clearCartBtn" class="w-full bg-red-600 hover:bg-red-400 text-white font-semibold py-2 rounded-full shadow transition text-lg mb-2">Clear Cart</button>
+    <button id="checkoutBtn" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-3 rounded-full shadow transition text-lg">Checkout</button>
+  </div>
+  <button id="openCart" class="fixed bottom-8 right-8 bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white px-6 py-3 rounded-full shadow-lg text-lg z-40">View Cart</button>
+  <!-- Add to Cart Modal -->
+  <div id="addToCartModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-md relative">
+      <button id="closeAddToCartModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+      <h3 class="text-2xl font-bold text-green-800 mb-4">Add to Cart</h3>
+      <div class="mb-4 text-green-900" id="cartCropName"></div>
+      <form id="addToCartForm">
+        <label class="block text-green-900 mb-2" for="cartQuantity">Quantity (kg)</label>
+        <input class="w-full px-4 py-2 border rounded mb-4" type="number" id="cartQuantity" min="1" required>
+        <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg">Add</button>
+      </form>
+    </div>
+  </div>
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-8 right-8 bg-green-700 text-white px-6 py-3 rounded shadow-lg z-50 hidden"></div>
+  <!-- Leave Review Modal (with stars) -->
+  <div id="leaveReviewModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-md relative">
+      <button id="closeReviewModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+      <h3 class="text-2xl font-bold text-green-800 mb-4">Leave a Review</h3>
+      <form id="leaveReviewForm">
+        <input type="hidden" id="reviewFarmerId">
+        <input type="hidden" id="reviewCropId">
+        <input type="hidden" id="reviewOrderId">
+        <label class="block text-green-900 mb-2">Rating</label>
+        <div id="starRating" class="flex items-center mb-4 text-2xl cursor-pointer">
+          <span class="star" data-value="1">&#9734;</span>
+          <span class="star" data-value="2">&#9734;</span>
+          <span class="star" data-value="3">&#9734;</span>
+          <span class="star" data-value="4">&#9734;</span>
+          <span class="star" data-value="5">&#9734;</span>
+        </div>
+        <input type="hidden" id="reviewRating" required>
+        <label class="block text-green-900 mb-2" for="reviewComment">Comment</label>
+        <textarea id="reviewComment" class="w-full px-4 py-2 border rounded mb-4" rows="3"></textarea>
+        <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg">Submit</button>
+      </form>
+    </div>
+  </div>
+  <!-- Profile Modal -->
+  <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-md relative">
+      <button id="closeProfileModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+      <h3 class="text-2xl font-bold text-green-800 mb-4">My Profile</h3>
+      <form id="profileForm">
+        <div class="mb-4">
+          <label class="block text-green-900 mb-2" for="profileName">Name</label>
+          <input class="w-full px-4 py-2 border rounded" type="text" id="profileName" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-green-900 mb-2" for="profileEmail">Email</label>
+          <input class="w-full px-4 py-2 border rounded" type="email" id="profileEmail" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-green-900 mb-2" for="profilePassword">New Password</label>
+          <input class="w-full px-4 py-2 border rounded" type="password" id="profilePassword" placeholder="Leave blank to keep current password">
+        </div>
+        <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-3 rounded-full shadow transition text-lg">Save Changes</button>
+      </form>
+    </div>
+  </div>
+  <!-- Invoice Modal -->
+  <div id="invoiceModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-lg relative">
+      <button id="closeInvoiceModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+      <div id="invoiceContent"></div>
+      <button id="printInvoiceBtn" class="mt-4 w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg">Print</button>
+    </div>
+  </div>
+  <!-- Order Type Modal -->
+  <div id="orderTypeModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-md relative">
+      <button id="closeOrderTypeModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+      <h3 class="text-2xl font-bold text-green-800 mb-4">How would you like to receive your order?</h3>
+      <div class="flex flex-col gap-4">
+        <button id="pickupOption" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-3 rounded-full shadow transition text-lg">Pickup</button>
+        <button id="deliveryOption" class="w-full bg-yellow-400 hover:bg-green-700 hover:text-white text-green-900 font-semibold py-3 rounded-full shadow transition text-lg">Delivery</button>
+      </div>
+      <form id="deliveryForm" class="mt-6 hidden">
+        <h4 class="text-lg font-semibold text-green-800 mb-2">Enter Delivery Details</h4>
+        <div class="mb-2">
+          <label class="block text-green-900 mb-1" for="deliveryAddress">Address</label>
+          <input class="w-full px-3 py-2 border rounded" type="text" id="deliveryAddress" required>
+        </div>
+        <div class="mb-2">
+          <label class="block text-green-900 mb-1" for="deliveryCity">City</label>
+          <input class="w-full px-3 py-2 border rounded" type="text" id="deliveryCity" required>
+        </div>
+        <div class="mb-2">
+          <label class="block text-green-900 mb-1" for="deliveryPostalCode">Postal Code</label>
+          <input class="w-full px-3 py-2 border rounded" type="text" id="deliveryPostalCode" required pattern="^[0-9]{5,10}$">
+        </div>
+        <div class="mb-4">
+          <label class="block text-green-900 mb-1" for="deliveryContact">Contact Number</label>
+          <input class="w-full px-3 py-2 border rounded" type="text" id="deliveryContact" required pattern="^[0-9\-\+]{8,15}$">
+        </div>
+        <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg">Place Order</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    let allCrops = [];
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    }
+    function setCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    async function fetchCrops() {
+      const res = await fetch('http://localhost:5000/api/crops?isApproved=true');
+      allCrops = await res.json();
+      // Fetch reviews for all crops
+      await Promise.all(allCrops.map(async crop => {
+        const reviewsRes = await fetch(`http://localhost:5000/api/reviews?crop=${crop._id}`);
+        const reviews = await reviewsRes.json();
+        crop.reviews = reviews;
+        crop.avgRating = reviews.length ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) : 0;
+      }));
+      renderCrops(allCrops);
+    }
+    function renderCrops(crops) {
+      const tbody = document.querySelector('#cropsTableBody');
+      tbody.innerHTML = '';
+      crops.forEach(crop => {
+        const avg = crop.avgRating || 0;
+        const stars = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+        const reviewsCount = crop.reviews ? crop.reviews.length : 0;
+        const reviewsHtml = (crop.reviews && crop.reviews.length) ? `<div class='mt-1 text-xs text-green-900'>${crop.reviews.slice(0,2).map(r => `<div><span class='text-yellow-400'>${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span> <span class='font-semibold'>${r.consumer?.name || 'Anonymous'}</span>: ${r.comment || ''}</div>`).join('')}</div>` : '';
+        const backendUrl = "http://localhost:5000";
+        let photo = (crop.photos && crop.photos[0])
+          ? (
+              /^(https?:)?\/\//.test(crop.photos[0])
+                ? crop.photos[0]
+                : crop.photos[0].startsWith('/uploads/')
+                  ? backendUrl + crop.photos[0]
+                  : crop.photos[0].includes('.') && !crop.photos[0].startsWith('/')
+                    ? 'https://' + crop.photos[0]
+                    : backendUrl + crop.photos[0]
+            )
+          : 'https://via.placeholder.com/40';
+        const outOfStock = crop.quantity <= 0;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2 px-4">
+            <div class="flex items-center">
+              <img src="${photo}" alt="Crop" class="w-12 h-12 rounded mr-2">
+              <div>
+                <div>${crop.name}</div>
+                <div class="flex items-center text-yellow-400 text-sm">${stars}<span class="ml-2 text-green-900">(${reviewsCount})</span></div>
+                ${reviewsHtml}
+              </div>
+            </div>
+          </td>
+          <td class="py-2 px-4">${crop.farmer?.name || ''}</td>
+          <td class="py-2 px-4">
+            ${crop.discountPercent ? `<span class='line-through text-red-500 mr-2'>₹${crop.price}/kg</span><span class='text-green-700 font-bold'>₹${(crop.price * (1 - crop.discountPercent / 100)).toFixed(2)}/kg (${crop.discountPercent}% off)</span>` : `₹${crop.price}/kg`}
+          </td>
+          <td class="py-2 px-4">${crop.farmer?.location ? `${crop.farmer.location.district || ''}, ${crop.farmer.location.village || ''}` : ''}</td>
+          <td class="py-2 px-4">
+            ${outOfStock ? `<span class='inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold'>Out of Stock</span>` : `<button class="addToCartBtn bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white px-3 py-1 rounded transition" data-crop='${JSON.stringify({id: crop._id, name: crop.name, farmerId: crop.farmer?._id, farmerName: crop.farmer?.name, price: (crop.discountPercent ? (crop.price * (1 - crop.discountPercent / 100)) : crop.price), photo: photo})}'>Add to Cart</button>`}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    document.querySelector('input[type="text"]').addEventListener('input', function(e) {
+      const val = e.target.value.toLowerCase();
+      const filtered = allCrops.filter(crop => crop.name.toLowerCase().includes(val));
+      renderCrops(filtered);
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      fetchCrops();
+      fetchOrderHistory();
+      setWelcomeName();
+      setInterval(() => {
+        fetchCrops();
+        fetchOrderHistory();
+        setWelcomeName();
+      }, 10000);
+    });
+
+    // Cart logic
+    let addToCartCrop = null;
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('addToCartBtn')) {
+        const crop = JSON.parse(e.target.getAttribute('data-crop'));
+        addToCartCrop = crop;
+        document.getElementById('cartCropName').textContent = crop.name;
+        document.getElementById('cartQuantity').value = 1;
+        document.getElementById('addToCartModal').classList.remove('hidden');
+      }
+    });
+    document.getElementById('closeAddToCartModal').onclick = function() {
+      document.getElementById('addToCartModal').classList.add('hidden');
+    };
+    document.getElementById('addToCartForm').onsubmit = function(e) {
+      e.preventDefault();
+      const qty = parseInt(document.getElementById('cartQuantity').value);
+      if (!qty || qty <= 0) return;
+      let cart = getCart();
+      const crop = addToCartCrop;
+      const idx = cart.findIndex(item => item.cropId === crop.id && item.farmerId === crop.farmerId);
+      if (idx > -1) {
+        cart[idx].quantity += qty;
+      } else {
+        cart.push({ ...crop, cropId: crop.id, quantity: qty });
+      }
+      setCart(cart);
+      document.getElementById('addToCartModal').classList.add('hidden');
+      showToast('Added to cart!');
+    };
+    function showToast(msg, color = 'bg-green-700') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `fixed bottom-8 right-8 ${color} text-white px-6 py-3 rounded shadow-lg z-50`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2000);
+    }
+    // Cart sidebar logic
+    const cartSidebar = document.getElementById('cartSidebar');
+    document.getElementById('openCart').onclick = () => {
+      renderCart();
+      cartSidebar.classList.remove('hidden');
+      cartSidebar.classList.add('flex');
+    };
+    document.getElementById('closeCart').onclick = () => {
+      cartSidebar.classList.add('hidden');
+      cartSidebar.classList.remove('flex');
+    };
+    function renderCart() {
+      const cart = getCart();
+      const cartItemsDiv = document.getElementById('cartItems');
+      let total = 0;
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<p class="text-green-900">Cart is empty.</p>';
+        document.getElementById('cartTotal').textContent = '₹0';
+        return;
+      }
+      // Group by farmer
+      const grouped = {};
+      cart.forEach(item => {
+        if (!grouped[item.farmerId]) grouped[item.farmerId] = [];
+        grouped[item.farmerId].push(item);
+      });
+      cartItemsDiv.innerHTML = Object.keys(grouped).map(fid => {
+        const farmerName = grouped[fid][0].farmerName || 'Farmer';
+        const items = grouped[fid].map(item => {
+          const backendUrl = "http://localhost:5000";
+          let photo = item.photo
+            ? (
+                /^(https?:)?\/\//.test(item.photo)
+                  ? item.photo
+                  : item.photo.startsWith('/uploads/')
+                    ? backendUrl + item.photo
+                    : item.photo.includes('.') && !item.photo.startsWith('/')
+                      ? 'https://' + item.photo
+                      : backendUrl + item.photo
+              )
+            : 'https://via.placeholder.com/40';
+          total += item.price * item.quantity;
+          return `<div class="flex items-center mb-2 border-b pb-2">
+            <img src="${photo}" alt="Crop" class="w-12 h-12 rounded mr-2">
+            <div class="flex-1">
+              <div class="font-semibold text-green-800">${item.name}</div>
+              <div class="text-green-900 text-sm">by ${farmerName}</div>
+              <div class="text-green-900 text-sm">₹${item.price}/kg</div>
+              <div class="flex items-center mt-1">
+                <input type="number" min="1" value="${item.quantity}" data-id="${item.cropId}" class="cartQtyInput w-16 px-2 py-1 border rounded mr-2">
+                <span class="text-green-900 text-sm">kg</span>
+                <button class="removeCartItemBtn text-red-600 hover:underline ml-3" data-id="${item.cropId}" data-farmer="${item.farmerId}">Remove</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+        return `<div class="mb-4"><div class="font-semibold text-green-800 mb-1">${farmerName}</div>${items}</div>`;
+      }).join('');
+      document.getElementById('cartTotal').textContent = '₹' + total;
+    }
+    // Edit quantity in cart
+    document.getElementById('cartItems').addEventListener('change', function(e) {
+      if (e.target.classList.contains('cartQtyInput')) {
+        const cropId = e.target.getAttribute('data-id');
+        let qty = parseInt(e.target.value);
+        if (!qty || qty < 1) qty = 1;
+        let cart = getCart();
+        const idx = cart.findIndex(item => item.cropId === cropId);
+        if (idx > -1) {
+          cart[idx].quantity = qty;
+          setCart(cart);
+          renderCart();
+        }
+      }
+    });
+    // Remove item from cart
+    document.getElementById('cartItems').addEventListener('click', function(e) {
+      if (e.target.classList.contains('removeCartItemBtn')) {
+        const cropId = e.target.getAttribute('data-id');
+        const farmerId = e.target.getAttribute('data-farmer');
+        let cart = getCart();
+        cart = cart.filter(item => !(item.cropId === cropId && item.farmerId === farmerId));
+        setCart(cart);
+        renderCart();
+        showToast('Item removed from cart!');
+      }
+    });
+    // Clear cart
+    document.getElementById('clearCartBtn').onclick = function() {
+      if (confirm('Clear all items from cart?')) {
+        setCart([]);
+        renderCart();
+        showToast('Cart cleared!');
+      }
+    };
+    // Checkout logic
+    document.getElementById('checkoutBtn').onclick = function() {
+      const cart = getCart();
+      if (cart.length === 0) { showToast('Cart is empty.', 'bg-red-600'); return; }
+      document.getElementById('orderTypeModal').classList.remove('hidden');
+      document.getElementById('orderTypeModal').classList.add('flex');
+      // Reset modal state
+      document.getElementById('deliveryForm').classList.add('hidden');
+    };
+    document.getElementById('closeOrderTypeModal').onclick = function() {
+      document.getElementById('orderTypeModal').classList.add('hidden');
+      document.getElementById('orderTypeModal').classList.remove('flex');
+    };
+    document.getElementById('pickupOption').onclick = async function() {
+      await placeOrdersWithType('Pickup');
+      document.getElementById('orderTypeModal').classList.add('hidden');
+      document.getElementById('orderTypeModal').classList.remove('flex');
+    };
+    document.getElementById('deliveryOption').onclick = function() {
+      document.getElementById('deliveryForm').classList.remove('hidden');
+    };
+    document.getElementById('deliveryForm').onsubmit = async function(e) {
+      e.preventDefault();
+      // Validate fields
+      const address = document.getElementById('deliveryAddress').value.trim();
+      const city = document.getElementById('deliveryCity').value.trim();
+      const postalCode = document.getElementById('deliveryPostalCode').value.trim();
+      const contactNumber = document.getElementById('deliveryContact').value.trim();
+      if (!address || !city || !postalCode || !contactNumber) {
+        showToast('Please fill all delivery details.', 'bg-red-600');
+        return;
+      }
+      if (!/^[0-9]{5,10}$/.test(postalCode)) {
+        showToast('Invalid postal code.', 'bg-red-600');
+        return;
+      }
+      if (!/^[0-9\-\+]{8,15}$/.test(contactNumber)) {
+        showToast('Invalid contact number.', 'bg-red-600');
+        return;
+      }
+      await placeOrdersWithType('Delivery', { address, city, postalCode, contactNumber });
+      document.getElementById('orderTypeModal').classList.add('hidden');
+      document.getElementById('orderTypeModal').classList.remove('flex');
+    };
+    async function placeOrdersWithType(orderType, deliveryAddress) {
+      const token = localStorage.getItem('token');
+      if (!token) { showToast('Please login first.', 'bg-red-600'); return; }
+      const cart = getCart();
+      if (cart.length === 0) { showToast('Cart is empty.', 'bg-red-600'); return; }
+      // Group by farmer
+      const grouped = {};
+      cart.forEach(item => {
+        if (!grouped[item.farmerId]) grouped[item.farmerId] = [];
+        grouped[item.farmerId].push(item);
+      });
+      let allSuccess = true;
+      for (const farmerId in grouped) {
+        const items = grouped[farmerId];
+        const crops = items.map(i => ({ crop: i.cropId, quantity: i.quantity }));
+        const body = { farmer: farmerId, crops, orderType };
+        if (orderType === 'Delivery') body.deliveryAddress = deliveryAddress;
+        try {
+          const res = await fetch('http://localhost:5000/api/orders', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(body)
+          });
+          if (!res.ok) allSuccess = false;
+        } catch (err) {
+          allSuccess = false;
+        }
+      }
+      if (allSuccess) {
+        setCart([]);
+        renderCart();
+        showToast('Order(s) placed successfully!');
+        cartSidebar.classList.add('hidden');
+        cartSidebar.classList.remove('flex');
+        fetchOrderHistory(); // Instant update
+        fetchCrops();        // Instant update
+      } else {
+        showToast('Some orders could not be placed.', 'bg-red-600');
+      }
+    }
+
+    function getOrderProgress(status) {
+      const steps = ['Pending', 'Confirmed', 'Delivered'];
+      let current = steps.indexOf(status);
+      if (status === 'Cancelled') current = -1;
+      return `
+        <div class='flex items-center space-x-2 my-1'>
+          ${steps.map((step, i) => `
+            <div class='flex items-center'>
+              <div class='w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${i <= current ? 'bg-green-700 text-white' : 'bg-green-100 text-green-700'}'>${i+1}</div>
+              ${i < steps.length-1 ? `<div class='w-8 h-1 ${i < current ? 'bg-green-700' : 'bg-green-100'}'></div>` : ''}
+            </div>
+          `).join('')}
+          ${status === 'Cancelled' ? `<span class='ml-2 px-2 py-1 bg-red-600 text-white rounded text-xs'>Cancelled</span>` : ''}
+        </div>
+      `;
+    }
+    async function fetchOrderHistory() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('http://localhost:5000/api/orders/my', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const orders = await res.json();
+      // Fetch all reviews by this user
+      const reviewsRes = await fetch('http://localhost:5000/api/reviews', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const allReviews = await reviewsRes.json();
+      // Update summary cards
+      document.querySelectorAll('.summary-orders').forEach(el => el.textContent = orders.length);
+      const totalSpent = orders
+        .filter(order => order.status !== 'Cancelled')
+        .reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+      document.querySelectorAll('.summary-spent').forEach(el => el.textContent = '₹' + totalSpent);
+      const tbody = document.querySelector('#orderHistoryTableBody');
+      tbody.innerHTML = '';
+      orders.forEach((order, idx) => {
+        const cropsList = order.crops.map(c => `${c.crop?.name || ''} (${c.quantity} kg)`).join(', ');
+        const reviewBtns = order.crops.map(c => {
+          // Find review for this order, crop, and user (compare as strings)
+          const review = allReviews.find(r => String(r.order) === String(order._id) && String(r.crop) === String(c.crop?._id));
+          if (review) {
+            return `
+              <div class='bg-green-50 border border-green-200 rounded-lg p-2 mb-1 w-full shadow-sm'>
+                <div class='flex items-center mb-1'>
+                  <span class='text-yellow-400 text-xl mr-2'>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
+                  <span class='text-green-900 text-xs font-semibold mr-2'>You</span>
+                  <span class='text-green-700 text-xs'>${review.createdAt ? new Date(review.createdAt).toLocaleDateString() : ''}</span>
+                </div>
+                <div class='text-green-900 text-sm'>${review.comment ? review.comment : '<i>No comment</i>'}</div>
+              </div>
+            `;
+          }
+          if (order.status === 'Delivered') {
+            return `<button class='leaveReviewBtn flex items-center gap-1 bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white px-3 py-1 rounded-full text-xs font-semibold shadow transition mb-1' data-farmer='${order.farmer?._id}' data-crop='${c.crop?._id}' data-order='${order._id}'>
+              <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4 inline text-yellow-300' fill='currentColor' viewBox='0 0 20 20'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z'/></svg>
+              Review ${c.crop?.name || ''}
+            </button>`;
+          }
+          return '';
+        }).join('');
+        const progressBar = getOrderProgress(order.status);
+        let pickupStatusHtml = '';
+        if (order.orderType === 'Pickup') {
+          pickupStatusHtml = `<span class='inline-block px-3 py-1 rounded-full text-xs font-semibold ${order.pickupStatus === 'Ready' ? 'bg-green-200 text-green-800' : 'bg-yellow-100 text-yellow-800'}'>${order.pickupStatus || 'Not Ready'}</span>`;
+        }
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2 px-4">${order.createdAt ? new Date(order.createdAt).toLocaleString() : ''}</td>
+          <td class="py-2 px-4">${cropsList}</td>
+          <td class="py-2 px-4">${order.farmer?.name || ''}</td>
+          <td class="py-2 px-4">₹${order.totalAmount}</td>
+          <td class="py-2 px-4">
+            ${order.status}
+            ${progressBar}
+          </td>
+          <td class="py-2 px-4">${pickupStatusHtml}</td>
+          <td class="py-2 px-4"><button class="downloadInvoiceBtn bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white px-3 py-1 rounded-full text-xs" data-idx="${idx}">Download Invoice</button></td>
+          <td class="py-2 px-4">${reviewBtns}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', fetchOrderHistory);
+    // Leave Review modal logic
+    let reviewFarmerId = '', reviewCropId = '', reviewOrderId = '';
+    document.getElementById('orderHistoryTableBody').addEventListener('click', function(e) {
+      if (e.target.classList.contains('leaveReviewBtn')) {
+        reviewFarmerId = e.target.getAttribute('data-farmer');
+        reviewCropId = e.target.getAttribute('data-crop');
+        reviewOrderId = e.target.getAttribute('data-order');
+        document.getElementById('reviewFarmerId').value = reviewFarmerId;
+        document.getElementById('reviewCropId').value = reviewCropId;
+        document.getElementById('reviewOrderId').value = reviewOrderId;
+        setStars(0);
+        document.getElementById('reviewComment').value = '';
+        document.getElementById('leaveReviewModal').classList.remove('hidden');
+      }
+    });
+    document.getElementById('closeReviewModal').onclick = function() {
+      document.getElementById('leaveReviewModal').classList.add('hidden');
+    };
+    document.getElementById('leaveReviewForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const farmer = document.getElementById('reviewFarmerId').value;
+      const crop = document.getElementById('reviewCropId').value;
+      const order = document.getElementById('reviewOrderId').value;
+      const rating = parseInt(document.getElementById('reviewRating').value);
+      const comment = document.getElementById('reviewComment').value;
+      const res = await fetch('http://localhost:5000/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ farmer, crop, order, rating, comment })
+      });
+      if (res.ok) {
+        showToast('Review submitted!');
+        document.getElementById('leaveReviewModal').classList.add('hidden');
+        fetchOrderHistory(); // Instant update
+        fetchCrops();        // Instant update
+      } else {
+        const result = await res.json();
+        showToast(result.message || 'Failed to submit review.', 'bg-red-600');
+      }
+    };
+    document.getElementById('logoutBtn').onclick = function() {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    };
+    // Profile modal logic
+    const profileBtn = document.createElement('button');
+    profileBtn.textContent = 'Profile';
+    profileBtn.className = 'ml-0 sm:ml-4 bg-green-100 hover:bg-green-200 text-green-900 px-4 py-2 rounded transition';
+    profileBtn.onclick = function() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      fetch('http://localhost:5000/api/users/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(res => res.json())
+      .then(user => {
+        document.getElementById('profileName').value = user.name;
+        document.getElementById('profileEmail').value = user.email;
+        document.getElementById('profilePassword').value = '';
+        document.getElementById('profileModal').classList.remove('hidden');
+      });
+    };
+    document.querySelector('nav ul').appendChild(profileBtn);
+    document.getElementById('closeProfileModal').onclick = function() {
+      document.getElementById('profileModal').classList.add('hidden');
+    };
+    document.getElementById('profileForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const name = document.getElementById('profileName').value;
+      const email = document.getElementById('profileEmail').value;
+      const password = document.getElementById('profilePassword').value;
+      const res = await fetch('http://localhost:5000/api/users/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ name, email, password: password || undefined })
+      });
+      if (res.ok) {
+        showToast('Profile updated!');
+        document.getElementById('profileModal').classList.add('hidden');
+      } else {
+        showToast('Failed to update profile.', 'bg-red-600');
+      }
+    };
+    // Star rating logic
+    const starEls = document.querySelectorAll('#starRating .star');
+    let selectedRating = 0;
+    function setStars(rating) {
+      starEls.forEach(star => {
+        star.innerHTML = star.getAttribute('data-value') <= rating ? '&#9733;' : '&#9734;';
+      });
+      document.getElementById('reviewRating').value = rating;
+      selectedRating = rating;
+    }
+    starEls.forEach(star => {
+      star.onclick = function() {
+        setStars(parseInt(this.getAttribute('data-value')));
+      };
+      star.onmouseover = function() {
+        setStars(parseInt(this.getAttribute('data-value')));
+      };
+      star.onmouseout = function() {
+        setStars(selectedRating);
+      };
+    });
+    // Invoice modal logic
+    let currentInvoiceOrder = null;
+    document.getElementById('orderHistoryTableBody').addEventListener('click', function(e) {
+      if (e.target.classList.contains('downloadInvoiceBtn')) {
+        const idx = e.target.getAttribute('data-idx');
+        showInvoiceModal(idx);
+      }
+    });
+    function showInvoiceModal(idx) {
+      const token = localStorage.getItem('token');
+      fetch('http://localhost:5000/api/orders/my', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(res => res.json())
+      .then(orders => {
+        const order = orders[idx];
+        currentInvoiceOrder = order;
+        const cropsHtml = order.crops.map(c => `<tr><td>${c.crop?.name || ''}</td><td>${c.quantity} kg</td><td>₹${c.crop?.price || ''}</td><td>₹${(c.crop?.price || 0) * c.quantity}</td></tr>`).join('');
+        document.getElementById('invoiceContent').innerHTML = `
+          <div class='rounded-lg border-4 border-green-700 p-6 bg-white shadow-lg'>
+            <div class='flex items-center mb-2'>
+              <img src='icon.jpg' alt='AgriConnect Logo' class='h-14 w-14 mr-4 rounded-full' style='display:inline-block;vertical-align:middle;'>
+              <div>
+                <span class='text-4xl font-extrabold text-green-800' style='vertical-align:middle;'>AgriConnect</span><br>
+                <span class='text-lg text-green-700 font-semibold'>Bridging Farmers and Consumers for a Sustainable Future</span>
+              </div>
+            </div>
+            <hr class='my-3 border-green-300'>
+            <h3 class='text-2xl font-bold text-green-800 mb-2 text-center'>Order Invoice</h3>
+            <div class='mb-2 text-green-900'><b>Date:</b> ${order.createdAt ? new Date(order.createdAt).toLocaleString() : ''}</div>
+            <div class='mb-2 text-green-900'><b>Order ID:</b> ${order._id}</div>
+            <div class='mb-2 text-green-900'><b>Farmer:</b> ${order.farmer?.name || ''}</div>
+            <div class='mb-2 text-green-900'><b>Status:</b> ${order.status}</div>
+            <div class='mb-2 text-green-900'><b>Order Type:</b> ${order.orderType || ''}</div>
+            <table class='w-full text-green-900 mb-2 border border-green-200 rounded'><thead><tr class='bg-green-100'><th>Crop</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${cropsHtml}</tbody></table>
+            <div class='text-right text-xl font-bold text-green-800 mb-4'>Total: ₹${order.totalAmount}</div>
+            <div class='text-center text-green-800 font-semibold mt-6 mb-2'>Thank you for supporting local farmers!</div>
+            <div class='text-center text-green-600 text-sm'>&copy; 2025 AgriConnect. All rights reserved.</div>
+          </div>
+        `;
+        document.getElementById('invoiceModal').classList.remove('hidden');
+      });
+    }
+    document.getElementById('closeInvoiceModal').onclick = function() {
+      document.getElementById('invoiceModal').classList.add('hidden');
+    };
+    document.getElementById('printInvoiceBtn').onclick = function() {
+      const printContents = document.getElementById('invoiceContent').innerHTML;
+      const win = window.open('', '', 'width=800,height=600');
+      win.document.write('<html><head><title>Order Invoice</title><link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"></head><body>' + printContents + '</body></html>');
+      win.document.close();
+      win.print();
+    };
+    // Add logic to update welcome message with consumer's name
+    async function setWelcomeName() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      try {
+        const res = await fetch('http://localhost:5000/api/users/me', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) return;
+        const user = await res.json();
+        if (user && user.name) {
+          document.getElementById('welcomeHeader').textContent = `Welcome, ${user.name}!`;
+        }
+      } catch (e) {}
+    }
+    document.addEventListener('DOMContentLoaded', setWelcomeName);
+  </script>
+</body>
+</html> 

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Dashboard | AgriConnect</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-green-50 min-h-screen">
+  <!-- Navbar -->
+  <nav class="bg-green-700 text-white shadow">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center py-4 px-4 sm:px-6">
+      <div class="flex items-center mb-2 sm:mb-0">
+        <img src="icon.jpg" alt="Leaf Icon" class="h-10 w-10 mr-2 rounded-full" />
+        <span class="text-2xl font-bold tracking-wide">AgriConnect</span>
+      </div>
+      <ul class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-lg items-center">
+        <li><a href="index.html" class="hover:text-yellow-300 transition">Home</a></li>
+        <li><a href="farmer-dashboard.html" class="text-yellow-300 font-semibold">Farmers</a></li>
+        <li><a href="login.html" class="hover:text-yellow-300 transition">Consumers</a></li>
+        <li><a href="about.html" class="hover:text-yellow-300 transition">About</a></li>
+        <li><a href="contact.html" class="hover:text-yellow-300 transition">Contact</a></li>
+        <li><button id="logoutBtn" class="ml-0 sm:ml-4 bg-yellow-400 hover:bg-green-700 hover:text-white text-green-900 px-4 py-2 rounded transition">Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="flex-1 container mx-auto px-2 sm:px-4 py-8">
+    <h2 id="welcomeHeader" class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">Welcome, Farmer!</h2>
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow p-6 text-center">
+        <div class="text-2xl font-bold text-green-700 summary-crops">0</div>
+        <div class="text-green-900">Total Crops</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6 text-center">
+        <div class="text-2xl font-bold text-green-700 summary-orders">0</div>
+        <div class="text-green-900">Total Orders</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6 text-center">
+        <div class="text-2xl font-bold text-green-700 summary-earnings">₹0</div>
+        <div class="text-green-900">Total Earnings</div>
+      </div>
+    </div>
+    <!-- Manage Crops -->
+    <section class="flex-1">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-2xl font-semibold text-green-800">Manage Crops</h3>
+        <button class="bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white px-4 py-2 rounded shadow transition gradient-btn">Add Crop</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-green-100 text-green-900">
+              <th class="py-2 px-4">Photo</th>
+              <th class="py-2 px-4">Name</th>
+              <th class="py-2 px-4">Quantity</th>
+              <th class="py-2 px-4">Price</th>
+              <th class="py-2 px-4">Harvest Date</th>
+              <th class="py-2 px-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="cropsTableBody">
+            <!-- Crops will be loaded here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Orders Management Section -->
+    <section>
+      <h3 class="text-2xl font-semibold text-green-800 mb-4">Orders</h3>
+      <div class="overflow-x-auto mb-4">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead>
+            <tr class="bg-green-100 text-green-900">
+              <th class="py-2 px-4">Consumer</th>
+              <th class="py-2 px-4">Crops</th>
+              <th class="py-2 px-4">Total</th>
+              <th class="py-2 px-4">Status</th>
+              <th class="py-2 px-4">Order Type</th>
+              <th class="py-2 px-4">Delivery Address</th>
+              <th class="py-2 px-4">Pickup Status</th>
+              <th class="py-2 px-4">Date</th>
+              <th class="py-2 px-4">Action</th>
+            </tr>
+          </thead>
+          <tbody id="farmerOrdersTableBody">
+            <!-- Data will be loaded here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Reviews Section -->
+    <section>
+      <h3 class="text-2xl font-semibold text-green-800 mb-4">My Reviews</h3>
+      <div id="farmerReviews" class="space-y-4"></div>
+    </section>
+    <!-- Add Crop Modal -->
+    <div id="addCropModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-sm relative">
+        <button id="closeAddCropModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+        <h3 class="text-2xl font-bold text-green-800 mb-4">Add Crop</h3>
+        <form id="addCropForm">
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="block text-green-900 mb-1" for="cropName">Name</label>
+              <input class="w-full px-2 py-1 border rounded" type="text" id="cropName" required>
+            </div>
+            <div>
+              <label class="block text-green-900 mb-1" for="cropQuantity">Quantity (kg)</label>
+              <input class="w-full px-2 py-1 border rounded" type="number" id="cropQuantity" required min="1">
+            </div>
+            <div>
+              <label class="block text-green-900 mb-1" for="cropPrice">Price (per kg)</label>
+              <input class="w-full px-2 py-1 border rounded" type="number" id="cropPrice" required min="1">
+            </div>
+            <div>
+              <label class="block text-green-900 mb-1" for="cropDiscountPercent">Discount (%)</label>
+              <input class="w-full px-2 py-1 border rounded" type="number" id="cropDiscountPercent" min="0" max="100">
+            </div>
+            <div class="col-span-2">
+              <label class="block text-green-900 mb-1" for="cropHarvestDate">Harvest Date</label>
+              <input class="w-full px-2 py-1 border rounded" type="date" id="cropHarvestDate" required>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start mb-3">
+            <div class="flex-1">
+              <label class="block text-green-900 mb-1" for="cropPhoto">Photo</label>
+              <input class="w-full px-2 py-1 border rounded" type="file" id="cropPhoto" accept="image/*">
+            </div>
+            <img id="cropPhotoPreview" src="" alt="Preview" class="rounded h-14 w-14 object-cover mt-6 ml-2 hidden" />
+          </div>
+          <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg gradient-btn">Add Crop</button>
+        </form>
+      </div>
+    </div>
+    <!-- Edit Crop Modal -->
+    <div id="editCropModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-sm relative">
+        <button id="closeEditCropModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+        <h3 class="text-2xl font-bold text-green-800 mb-4">Edit Crop</h3>
+        <form id="editCropForm">
+          <input type="hidden" id="editCropId">
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="block text-green-900 mb-1" for="editCropName">Name</label>
+              <input class="w-full px-2 py-1 border rounded" type="text" id="editCropName" required>
+            </div>
+            <div>
+              <label class="block text-green-900 mb-1" for="editCropQuantity">Quantity (kg)</label>
+              <input class="w-full px-2 py-1 border rounded" type="number" id="editCropQuantity" required min="1">
+            </div>
+            <div>
+              <label class="block text-green-900 mb-1" for="editCropPrice">Price (per kg)</label>
+              <input class="w-full px-2 py-1 border rounded" type="number" id="editCropPrice" required min="1">
+            </div>
+            <div>
+              <label class="block text-green-900 mb-1" for="editCropDiscountPercent">Discount (%)</label>
+              <input class="w-full px-2 py-1 border rounded" type="number" id="editCropDiscountPercent" min="0" max="100">
+            </div>
+            <div class="col-span-2">
+              <label class="block text-green-900 mb-1" for="editCropHarvestDate">Harvest Date</label>
+              <input class="w-full px-2 py-1 border rounded" type="date" id="editCropHarvestDate" required>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start mb-3">
+            <div class="flex-1">
+              <label class="block text-green-900 mb-1" for="editCropPhoto">Photo</label>
+              <input class="w-full px-2 py-1 border rounded" type="file" id="editCropPhoto" accept="image/*">
+            </div>
+            <img id="editCropPhotoPreview" src="" alt="Preview" class="rounded h-14 w-14 object-cover mt-6 ml-2 hidden" />
+          </div>
+          <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg gradient-btn">Save Changes</button>
+        </form>
+      </div>
+    </div>
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs sm:max-w-md relative">
+        <button id="closeProfileModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+        <h3 class="text-2xl font-bold text-green-800 mb-4">My Profile</h3>
+        <form id="profileForm">
+          <div class="mb-4">
+            <label class="block text-green-900 mb-2" for="profileName">Name</label>
+            <input class="w-full px-4 py-2 border rounded" type="text" id="profileName" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-green-900 mb-2" for="profileEmail">Email</label>
+            <input class="w-full px-4 py-2 border rounded" type="email" id="profileEmail" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-green-900 mb-2" for="profilePassword">New Password</label>
+            <input class="w-full px-4 py-2 border rounded" type="password" id="profilePassword" placeholder="Leave blank to keep current password">
+          </div>
+          <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-3 rounded-full shadow transition text-lg gradient-btn">Save Changes</button>
+        </form>
+      </div>
+    </div>
+    <!-- Restock Modal -->
+    <div id="restockModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-lg p-4 sm:p-8 w-full max-w-xs relative">
+        <button id="closeRestockModal" class="absolute top-2 right-2 text-2xl text-green-700">&times;</button>
+        <h3 class="text-2xl font-bold text-green-800 mb-4">Restock Crop</h3>
+        <form id="restockForm">
+          <input type="hidden" id="restockCropId">
+          <label class="block text-green-900 mb-2" for="restockAmount">Amount to Add (kg)</label>
+          <input class="w-full px-4 py-2 border rounded mb-4" type="number" id="restockAmount" min="1" required>
+          <button type="submit" class="w-full bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white font-semibold py-2 rounded-full shadow transition text-lg gradient-btn">Restock</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-green-800 text-white text-center py-4 mt-auto text-sm sm:text-base">
+    © 2025 AgriConnect. All rights reserved.
+  </footer>
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-8 right-8 bg-green-700 text-white px-6 py-3 rounded shadow-lg z-50 hidden"></div>
+  <script>
+    function showToast(msg, color = 'bg-green-700') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `fixed bottom-8 right-8 ${color} text-white px-6 py-3 rounded shadow-lg z-50`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2000);
+    }
+    async function fetchFarmerCrops() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('http://localhost:5000/api/crops/my', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const crops = await res.json();
+      // Update summary
+      document.querySelectorAll('.summary-crops').forEach(el => el.textContent = crops.length);
+      // Update table
+      const tbody = document.querySelector('#cropsTableBody');
+      tbody.innerHTML = '';
+      crops.forEach(crop => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2 px-4"><img src="${(crop.photos && crop.photos[0]) ? crop.photos[0] : 'https://via.placeholder.com/40'}" alt="Crop" class="rounded h-12 w-12 object-cover"></td>
+          <td class="py-2 px-4">${crop.name}</td>
+          <td class="py-2 px-4">${crop.quantity} kg</td>
+          <td class="py-2 px-4">
+            ${crop.discountPercent ? `<span class='line-through text-red-500 mr-2'>₹${crop.price}/kg</span><span class='text-green-700 font-bold'>₹${(crop.price * (1 - crop.discountPercent / 100)).toFixed(2)}/kg (${crop.discountPercent}% off)</span>` : `₹${crop.price}/kg`}
+          </td>
+          <td class="py-2 px-4">${crop.harvestDate ? crop.harvestDate.substring(0,10) : ''}</td>
+          <td class="py-2 px-4">
+            <button class="text-green-700 hover:underline mr-2">Edit</button>
+            <button class="text-red-600 hover:underline">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    async function fetchFarmerOrders() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('http://localhost:5000/api/orders/farmer', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const orders = await res.json();
+      // Update summary cards
+      document.querySelectorAll('.summary-orders').forEach(el => el.textContent = orders.length);
+      const totalEarnings = orders
+        .filter(order => order.status === 'Delivered')
+        .reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+      document.querySelectorAll('.summary-earnings').forEach(el => el.textContent = '₹' + totalEarnings);
+      // Update table
+      const tbody = document.querySelector('#farmerOrdersTableBody');
+      tbody.innerHTML = '';
+      orders.forEach(order => {
+        const cropsList = order.crops.map(c => `${c.crop?.name || ''} (${c.quantity} kg)`).join(', ');
+        let deliveryAddressHtml = '';
+        if (order.orderType === 'Delivery' && order.deliveryAddress) {
+          deliveryAddressHtml = `<div><b>Address:</b> ${order.deliveryAddress.address || ''}</div><div><b>City:</b> ${order.deliveryAddress.city || ''}</div><div><b>Postal:</b> ${order.deliveryAddress.postalCode || ''}</div><div><b>Contact:</b> ${order.deliveryAddress.contactNumber || ''}</div>`;
+        }
+        let pickupStatusHtml = '';
+        if (order.orderType === 'Pickup') {
+          pickupStatusHtml = `<span class='inline-block px-3 py-1 rounded-full text-xs font-semibold ${order.pickupStatus === 'Ready' ? 'bg-green-200 text-green-800' : 'bg-yellow-100 text-yellow-800'}'>${order.pickupStatus || 'Not Ready'}</span>`;
+        }
+        let actionHtml = `<select class="orderStatusSelect px-2 py-1 border rounded" data-id="${order._id}">
+          <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+          <option value="Confirmed" ${order.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+          <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+          <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+        </select>`;
+        if (order.orderType === 'Pickup' && order.pickupStatus !== 'Ready') {
+          actionHtml += `<button class='ml-2 markReadyBtn bg-green-700 hover:bg-yellow-400 hover:text-green-900 text-white px-3 py-1 rounded-full text-xs' data-id='${order._id}'>Mark Ready</button>`;
+        }
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2 px-4">${order.consumer?.name || ''}</td>
+          <td class="py-2 px-4">${cropsList}</td>
+          <td class="py-2 px-4">₹${order.totalAmount}</td>
+          <td class="py-2 px-4">${order.status}</td>
+          <td class="py-2 px-4">${order.orderType || ''}</td>
+          <td class="py-2 px-4">${deliveryAddressHtml}</td>
+          <td class="py-2 px-4">${pickupStatusHtml}</td>
+          <td class="py-2 px-4">${order.createdAt ? new Date(order.createdAt).toLocaleString() : ''}</td>
+          <td class="py-2 px-4">${actionHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    // Update summary cards placeholders
+    document.querySelectorAll('.summary-crops').forEach(el => el.textContent = '0');
+    document.querySelectorAll('.summary-orders').forEach(el => el.textContent = '0');
+    document.querySelectorAll('.summary-earnings').forEach(el => el.textContent = '₹0');
+    // Call fetch on load
+    document.addEventListener('DOMContentLoaded', function() {
+      fetchFarmerCrops();
+      fetchFarmerOrders();
+      fetchFarmerReviews();
+      setWelcomeName();
+      setInterval(() => {
+        fetchFarmerCrops();
+        fetchFarmerOrders();
+        fetchFarmerReviews();
+        setWelcomeName();
+      }, 10000);
+    });
+    document.addEventListener('change', async function(e) {
+      if (e.target.classList.contains('orderStatusSelect')) {
+        const id = e.target.getAttribute('data-id');
+        const status = e.target.value;
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        const res = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ status })
+        });
+        if (res.ok) {
+          showToast('Order status updated!');
+          fetchFarmerOrders();
+        } else {
+          showToast('Failed to update order status.', 'bg-red-600');
+        }
+      }
+    });
+    // Add Crop Modal logic
+    document.querySelector('button.bg-green-700').onclick = function() {
+      document.getElementById('addCropModal').classList.remove('hidden');
+    };
+    document.getElementById('closeAddCropModal').onclick = function() {
+      document.getElementById('addCropModal').classList.add('hidden');
+    };
+    document.getElementById('addCropForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const name = document.getElementById('cropName').value;
+      const quantity = parseInt(document.getElementById('cropQuantity').value);
+      const price = parseFloat(document.getElementById('cropPrice').value);
+      const discountPercent = document.getElementById('cropDiscountPercent').value ? parseFloat(document.getElementById('cropDiscountPercent').value) : undefined;
+      const harvestDate = document.getElementById('cropHarvestDate').value;
+      const photoFile = document.getElementById('cropPhoto').files[0];
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('quantity', quantity);
+      formData.append('price', price);
+      if (discountPercent !== undefined) formData.append('discountPercent', discountPercent);
+      formData.append('harvestDate', harvestDate);
+      if (photoFile) {
+        formData.append('photo', photoFile);
+      }
+      const res = await fetch('http://localhost:5000/api/crops', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token },
+        body: formData
+      });
+      if (res.ok) {
+        showToast('Crop added!');
+        document.getElementById('addCropModal').classList.add('hidden');
+        document.getElementById('addCropForm').reset();
+        fetchFarmerCrops();
+      } else {
+        showToast('Failed to add crop.', 'bg-red-600');
+      }
+    };
+    // Add Edit/Delete buttons to crop rows
+    function renderCropRow(crop) {
+      const lowStock = crop.quantity <= 5;
+      const backendUrl = "http://localhost:5000";
+      let photoSrc = (crop.photos && crop.photos[0])
+        ? (
+            /^(https?:)?\/\//.test(crop.photos[0])
+              ? crop.photos[0]
+              : crop.photos[0].startsWith('/uploads/')
+                ? backendUrl + crop.photos[0]
+                : crop.photos[0].includes('.') && !crop.photos[0].startsWith('/')
+                  ? 'https://' + crop.photos[0]
+                  : backendUrl + crop.photos[0]
+          )
+        : 'https://via.placeholder.com/40';
+      return `
+        <tr>
+          <td class="py-2 px-4"><img src="${photoSrc}" alt="Crop" class="rounded h-12 w-12 object-cover"></td>
+          <td class="py-2 px-4">${crop.name}</td>
+          <td class="py-2 px-4">
+            ${crop.quantity} kg
+            ${lowStock ? `<span class='ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold'>Low Stock</span>` : ''}
+          </td>
+          <td class="py-2 px-4">
+            ${crop.discountPercent ? `<span class='line-through text-red-500 mr-2'>₹${crop.price}/kg</span><span class='text-green-700 font-bold'>₹${(crop.price * (1 - crop.discountPercent / 100)).toFixed(2)}/kg (${crop.discountPercent}% off)</span>` : `₹${crop.price}/kg`}
+          </td>
+          <td class="py-2 px-4">${crop.harvestDate ? crop.harvestDate.substring(0,10) : ''}</td>
+          <td class="py-2 px-4">
+            <button class="editCropBtn text-green-700 hover:underline mr-2" data-id="${crop._id}">Edit</button>
+            <button class="deleteCropBtn text-red-600 hover:underline mr-2" data-id="${crop._id}">Delete</button>
+            <button class="restockCropBtn text-blue-700 hover:underline" data-id="${crop._id}">Restock</button>
+          </td>
+        </tr>
+      `;
+    }
+    // Patch fetchFarmerCrops to use renderCropRow
+    async function fetchFarmerCrops() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('http://localhost:5000/api/crops/my', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const crops = await res.json();
+      document.querySelectorAll('.summary-crops').forEach(el => el.textContent = crops.length);
+      const tbody = document.querySelector('#cropsTableBody');
+      tbody.innerHTML = crops.map(renderCropRow).join('');
+    }
+    // Edit crop modal logic
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('editCropBtn')) {
+        const id = e.target.getAttribute('data-id');
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        fetch(`http://localhost:5000/api/crops/my`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        })
+        .then(res => res.json())
+        .then(crops => {
+          const crop = crops.find(c => c._id === id);
+          if (!crop) return;
+          document.getElementById('editCropId').value = crop._id;
+          document.getElementById('editCropName').value = crop.name;
+          document.getElementById('editCropQuantity').value = crop.quantity;
+          document.getElementById('editCropPrice').value = crop.price;
+          document.getElementById('editCropDiscountPercent').value = crop.discountPercent || '';
+          document.getElementById('editCropHarvestDate').value = crop.harvestDate ? crop.harvestDate.substring(0,10) : '';
+          // Set photo URL input and preview
+          const photoFileInput = document.getElementById('editCropPhoto');
+          const preview = document.getElementById('editCropPhotoPreview');
+          photoFileInput.value = '';
+          if (crop.photos && crop.photos[0]) {
+            // If the photo is a URL (not a local upload), set the URL input
+            if (/^https?:\/\//.test(crop.photos[0])) {
+              // This part is no longer needed as photo is only file input
+            } else {
+              // This part is no longer needed as photo is only file input
+            }
+            preview.src = crop.photos[0];
+            preview.classList.remove('hidden');
+          } else {
+            // This part is no longer needed as photo is only file input
+            preview.src = '';
+            preview.classList.add('hidden');
+          }
+          document.getElementById('editCropModal').classList.remove('hidden');
+        });
+      }
+      if (e.target.classList.contains('deleteCropBtn')) {
+        const id = e.target.getAttribute('data-id');
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        if (!confirm('Are you sure you want to delete this crop?')) return;
+        fetch(`http://localhost:5000/api/crops/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        }).then(res => {
+          if (res.ok) {
+            showToast('Crop deleted!');
+            fetchFarmerCrops();
+          } else {
+            showToast('Failed to delete crop.', 'bg-red-600');
+          }
+        });
+      }
+    });
+    document.getElementById('closeEditCropModal').onclick = function() {
+      document.getElementById('editCropModal').classList.add('hidden');
+    };
+    document.getElementById('editCropForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const id = document.getElementById('editCropId').value;
+      const name = document.getElementById('editCropName').value;
+      const quantity = parseInt(document.getElementById('editCropQuantity').value);
+      const price = parseFloat(document.getElementById('editCropPrice').value);
+      const discountPercentInput = document.getElementById('editCropDiscountPercent').value;
+      const discountPercent = discountPercentInput ? parseFloat(discountPercentInput) : null;
+      const harvestDate = document.getElementById('editCropHarvestDate').value;
+      const photoFile = document.getElementById('editCropPhoto').files[0];
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('quantity', quantity);
+      formData.append('price', price);
+      if (discountPercent !== null) formData.append('discountPercent', discountPercent);
+      formData.append('harvestDate', harvestDate);
+      if (photoFile) {
+        formData.append('photo', photoFile);
+      }
+      const res = await fetch(`http://localhost:5000/api/crops/${id}`, {
+        method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + token },
+        body: formData
+      });
+      if (res.ok) {
+        showToast('Crop updated!');
+        document.getElementById('editCropModal').classList.add('hidden');
+        fetchFarmerCrops();
+      } else {
+        showToast('Failed to update crop.', 'bg-red-600');
+      }
+    };
+    document.getElementById('logoutBtn').onclick = function() {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    };
+    // Profile modal logic
+    const profileBtn = document.createElement('button');
+    profileBtn.textContent = 'Profile';
+    profileBtn.className = 'ml-4 bg-green-100 hover:bg-green-200 text-green-900 px-4 py-2 rounded transition';
+    profileBtn.onclick = function() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      fetch('http://localhost:5000/api/users/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(res => res.json())
+      .then(user => {
+        document.getElementById('profileName').value = user.name;
+        document.getElementById('profileEmail').value = user.email;
+        document.getElementById('profilePassword').value = '';
+        document.getElementById('profileModal').classList.remove('hidden');
+      });
+    };
+    document.querySelector('nav ul').appendChild(profileBtn);
+    document.getElementById('closeProfileModal').onclick = function() {
+      document.getElementById('profileModal').classList.add('hidden');
+    };
+    document.getElementById('profileForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const name = document.getElementById('profileName').value;
+      const email = document.getElementById('profileEmail').value;
+      const password = document.getElementById('profilePassword').value;
+      const res = await fetch('http://localhost:5000/api/users/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ name, email, password: password || undefined })
+      });
+      if (res.ok) {
+        showToast('Profile updated!');
+        document.getElementById('profileModal').classList.add('hidden');
+      } else {
+        showToast('Failed to update profile.', 'bg-red-600');
+      }
+    };
+    async function fetchFarmerReviews() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      // Get farmer ID from profile
+      const userRes = await fetch('http://localhost:5000/api/users/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const user = await userRes.json();
+      const farmerId = user.id || user._id;
+      const res = await fetch(`http://localhost:5000/api/reviews?farmer=${farmerId}`);
+      const reviews = await res.json();
+      const reviewsDiv = document.getElementById('farmerReviews');
+      if (!reviews.length) {
+        reviewsDiv.innerHTML = '<div class="text-green-900">No reviews yet.</div>';
+        return;
+      }
+      reviewsDiv.innerHTML = reviews.map(r => `
+        <div class="bg-white rounded shadow p-4">
+          <div class="flex items-center mb-2">
+            <span class="font-semibold text-green-800 mr-2">${r.consumer?.name || 'Anonymous'}</span>
+            <span class="text-yellow-400 text-xl">${'&#9733;'.repeat(r.rating)}${'&#9734;'.repeat(5 - r.rating)}</span>
+            <span class="ml-2 text-green-900 text-sm">${r.createdAt ? new Date(r.createdAt).toLocaleDateString() : ''}</span>
+          </div>
+          <div class="text-green-900">${r.comment || ''}</div>
+        </div>
+      `).join('');
+    }
+    document.addEventListener('DOMContentLoaded', fetchFarmerReviews);
+    // Restock modal logic
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('restockCropBtn')) {
+        const restockCropId = e.target.getAttribute('data-id');
+        document.getElementById('restockCropId').value = restockCropId;
+        document.getElementById('restockAmount').value = '';
+        document.getElementById('restockModal').classList.remove('hidden');
+      }
+    });
+    document.getElementById('closeRestockModal').onclick = function() {
+      document.getElementById('restockModal').classList.add('hidden');
+    };
+    document.getElementById('restockForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const id = document.getElementById('restockCropId').value;
+      const amount = parseInt(document.getElementById('restockAmount').value);
+      if (!amount || amount <= 0) {
+        showToast('Please enter a valid amount.', 'bg-red-600');
+        return;
+      }
+      const res = await fetch(`http://localhost:5000/api/crops/${id}/restock`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ amount })
+      });
+      if (res.ok) {
+        showToast('Crop restocked!');
+        document.getElementById('restockModal').classList.add('hidden');
+        fetchFarmerCrops();
+      } else {
+        const result = await res.json();
+        showToast(result.message || 'Failed to restock crop.', 'bg-red-600');
+      }
+    };
+    // Mark Ready for Pickup logic
+    document.addEventListener('click', async function(e) {
+      if (e.target.classList.contains('markReadyBtn')) {
+        const id = e.target.getAttribute('data-id');
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        const res = await fetch(`http://localhost:5000/api/orders/${id}/pickup-status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ pickupStatus: 'Ready' })
+        });
+        if (res.ok) {
+          showToast('Marked as Ready for Pickup!');
+          fetchFarmerOrders();
+        } else {
+          showToast('Failed to update pickup status.', 'bg-red-600');
+        }
+      }
+    });
+    // Add photo preview for add crop
+    document.getElementById('cropPhoto').onchange = function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('cropPhotoPreview');
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+      } else {
+        preview.src = '';
+        preview.classList.add('hidden');
+      }
+    };
+    // Add photo preview for edit crop
+    document.getElementById('editCropPhoto').onchange = function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('editCropPhotoPreview');
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+      } else {
+        preview.src = '';
+        preview.classList.add('hidden');
+      }
+    };
+    // Add logic to update welcome message with farmer's name
+    async function setWelcomeName() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      try {
+        const res = await fetch('http://localhost:5000/api/users/me', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) return;
+        const user = await res.json();
+        if (user && user.name) {
+          document.getElementById('welcomeHeader').textContent = `Welcome, ${user.name}!`;
+        }
+      } catch (e) {}
+    }
+    document.addEventListener('DOMContentLoaded', setWelcomeName);
+  </script>
+</body>
+</html> 

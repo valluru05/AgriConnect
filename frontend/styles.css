@@ -1,0 +1,26 @@
+/* Gradient Button - matches your yellow/green palette */
+.gradient-btn {
+  background: linear-gradient(90deg, #facc15 0%, #f59e42 100%);
+  color: #14532d;
+  border-radius: 9999px;
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.gradient-btn:hover {
+  background: linear-gradient(90deg, #f59e42 0%, #facc15 100%);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Animated Card - subtle lift and shadow on hover */
+.animated-card {
+  transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+  box-shadow: 0 2px 8px rgba(20, 83, 45, 0.08); /* #14532d */
+  border-radius: 1rem;
+  background: #fff;
+}
+.animated-card:hover {
+  transform: translateY(-8px) scale(1.03) rotate(-1deg);
+  box-shadow: 0 8px 24px rgba(20, 83, 45, 0.15); /* #14532d */
+} 

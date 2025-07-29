@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | AgriConnect</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="flex flex-col min-h-screen" style="background-image: url('bg1.jpeg'); background-size: cover; background-position: center; position:relative;">
+  <!-- Navbar -->
+  <nav class="bg-green-700 text-white shadow">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center py-4 px-4 sm:px-6">
+      <div class="flex items-center mb-2 sm:mb-0">
+        <img src="icon.jpg" alt="Leaf Icon" class="h-10 w-10 mr-2 rounded-full" />
+        <span class="text-2xl font-bold tracking-wide">AgriConnect</span>
+      </div>
+      <ul class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-lg items-center">
+        <li><a href="index.html" class="hover:text-yellow-300 transition">Home</a></li>
+        <li><a href="login.html" class="hover:text-yellow-300 transition">Farmers</a></li>
+        <li><a href="login.html" class="hover:text-yellow-300 transition">Consumers</a></li>
+        <li><a href="about.html" class="hover:text-yellow-300 transition">About</a></li>
+        <li><a href="contact.html" class="hover:text-yellow-300 transition">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="flex-1 flex items-center justify-center" style="position:relative; z-index:1;">
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.4); z-index:0;"></div>
+    <div class="bg-white bg-opacity-90 rounded-lg p-4 sm:p-8 max-w-xs sm:max-w-2xl mx-auto text-center shadow-lg mt-10" style="position:relative; z-index:1;">
+      <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-4">Our Mission</h2>
+      <p class="text-base sm:text-lg text-green-900 mb-4">AgriConnect is dedicated to bridging the gap between rural farmers and urban consumers. Our platform empowers farmers by providing direct access to markets, fair pricing, and a supportive community. We believe in sustainable agriculture, transparent trade, and building a future where everyone benefits from fresh, local produce.</p>
+      <p class="text-base sm:text-lg text-green-900">Join us in supporting community farming and making a positive impact on both rural and urban lives.</p>
+    </div>
+  </main>
+  <section class="py-16" style="position:relative; z-index:1;">
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.4); z-index:0;"></div>
+    <div class="container mx-auto px-2 sm:px-4" style="position:relative; z-index:1;">
+      <h2 class="text-2xl sm:text-4xl font-bold text-center text-green-900 mb-4">Why Choose AgriConnect?</h2>
+      <p class="text-center text-green-800 mb-10 text-base sm:text-lg">Our platform brings together farmers and consumers for fair trade, sustainable farming, and fresh local produce.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Direct Connection -->
+        <div class="animated-card bg-white rounded-lg shadow p-8 flex flex-col items-center text-center">
+          <div class="flex items-center justify-center h-24 w-full">
+            <!-- Feather User Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-700 mb-4 transition-transform transition-colors duration-300 transform hover:scale-110 hover:text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4"/>
+              <path d="M5.5 21a7.5 7.5 0 0 1 13 0"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-green-900 mb-2">Direct Connection</h3>
+          <p class="text-green-800">Connect directly with local farmers, ensuring fair prices and fresh produce.</p>
+        </div>
+        <!-- Local Delivery -->
+        <div class="animated-card bg-white rounded-lg shadow p-8 flex flex-col items-center text-center">
+          <div class="flex items-center justify-center h-24 w-full">
+            <!-- Feather Truck Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-700 mb-4 transition-transform transition-colors duration-300 transform hover:scale-110 hover:text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" rx="2"/>
+              <path d="M16 8h3a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-green-900 mb-2">Local Delivery</h3>
+          <p class="text-green-800">Fast, reliable delivery from farms in your district and nearby areas.</p>
+        </div>
+        <!-- Verified Farmers -->
+        <div class="animated-card bg-white rounded-lg shadow p-8 flex flex-col items-center text-center">
+          <div class="flex items-center justify-center h-24 w-full">
+            <!-- Feather Shield Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-700 mb-4 transition-transform transition-colors duration-300 transform hover:scale-110 hover:text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-green-900 mb-2">Verified Farmers</h3>
+          <p class="text-green-800">All farmers are verified by our admin team to ensure quality and authenticity.</p>
+        </div>
+        <!-- Sustainable -->
+        <div class="animated-card bg-white rounded-lg shadow p-8 flex flex-col items-center text-center">
+          <div class="flex items-center justify-center h-24 w-full">
+            <!-- Feather Classic Leaf Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-700 mb-4 transition-transform transition-colors duration-300 transform hover:scale-110 hover:text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M4 22s8-2 12-10V2s-8 2-12 10v10z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-green-900 mb-2">Sustainable</h3>
+          <p class="text-green-800">Support eco-friendly farming practices and reduce carbon footprint.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-green-800 text-white text-center py-4 mt-auto text-sm sm:text-base">
+    © 2025 AgriConnect. All rights reserved.
+  </footer>
+</body>
+</html> 
