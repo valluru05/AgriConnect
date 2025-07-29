@@ -63,7 +63,7 @@
       const status = document.getElementById('contactStatus');
       status.textContent = '';
       try {
-        const res = await fetch('http://localhost:5000/api/contact', {
+        const res = await fetch('https://agriconnect-4n3i.onrender.com/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)

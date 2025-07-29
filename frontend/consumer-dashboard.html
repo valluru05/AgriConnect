@@ -216,11 +216,11 @@
       localStorage.setItem('cart', JSON.stringify(cart));
     }
     async function fetchCrops() {
-      const res = await fetch('http://localhost:5000/api/crops?isApproved=true');
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/crops?isApproved=true');
       allCrops = await res.json();
       // Fetch reviews for all crops
       await Promise.all(allCrops.map(async crop => {
-        const reviewsRes = await fetch(`http://localhost:5000/api/reviews?crop=${crop._id}`);
+        const reviewsRes = await fetch(`https://agriconnect-4n3i.onrender.com/api/reviews?crop=${crop._id}`);
         const reviews = await reviewsRes.json();
         crop.reviews = reviews;
         crop.avgRating = reviews.length ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) : 0;
@@ -235,7 +235,7 @@
         const stars = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
         const reviewsCount = crop.reviews ? crop.reviews.length : 0;
         const reviewsHtml = (crop.reviews && crop.reviews.length) ? `<div class='mt-1 text-xs text-green-900'>${crop.reviews.slice(0,2).map(r => `<div><span class='text-yellow-400'>${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span> <span class='font-semibold'>${r.consumer?.name || 'Anonymous'}</span>: ${r.comment || ''}</div>`).join('')}</div>` : '';
-        const backendUrl = "http://localhost:5000";
+        const backendUrl = "https://agriconnect-4n3i.onrender.com";
         let photo = (crop.photos && crop.photos[0])
           ? (
               /^(https?:)?\/\//.test(crop.photos[0])
@@ -354,7 +354,7 @@
       cartItemsDiv.innerHTML = Object.keys(grouped).map(fid => {
         const farmerName = grouped[fid][0].farmerName || 'Farmer';
         const items = grouped[fid].map(item => {
-          const backendUrl = "http://localhost:5000";
+          const backendUrl = "https://agriconnect-4n3i.onrender.com";
           let photo = item.photo
             ? (
                 /^(https?:)?\/\//.test(item.photo)
@@ -482,7 +482,7 @@
         const body = { farmer: farmerId, crops, orderType };
         if (orderType === 'Delivery') body.deliveryAddress = deliveryAddress;
         try {
-          const res = await fetch('http://localhost:5000/api/orders', {
+          const res = await fetch('https://agriconnect-4n3i.onrender.com/api/orders', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -527,12 +527,12 @@
     async function fetchOrderHistory() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:5000/api/orders/my', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/orders/my', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const orders = await res.json();
       // Fetch all reviews by this user
-      const reviewsRes = await fetch('http://localhost:5000/api/reviews', {
+      const reviewsRes = await fetch('https://agriconnect-4n3i.onrender.com/api/reviews', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const allReviews = await reviewsRes.json();
@@ -619,7 +619,7 @@
       const order = document.getElementById('reviewOrderId').value;
       const rating = parseInt(document.getElementById('reviewRating').value);
       const comment = document.getElementById('reviewComment').value;
-      const res = await fetch('http://localhost:5000/api/reviews', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ farmer, crop, order, rating, comment })
@@ -645,7 +645,7 @@
     profileBtn.onclick = function() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      fetch('http://localhost:5000/api/users/me', {
+      fetch('https://agriconnect-4n3i.onrender.com/api/users/me', {
         headers: { 'Authorization': 'Bearer ' + token }
       })
       .then(res => res.json())
@@ -667,7 +667,7 @@
       const name = document.getElementById('profileName').value;
       const email = document.getElementById('profileEmail').value;
       const password = document.getElementById('profilePassword').value;
-      const res = await fetch('http://localhost:5000/api/users/me', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/users/me', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ name, email, password: password || undefined })
@@ -710,7 +710,7 @@
     });
     function showInvoiceModal(idx) {
       const token = localStorage.getItem('token');
-      fetch('http://localhost:5000/api/orders/my', {
+      fetch('https://agriconnect-4n3i.onrender.com/api/orders/my', {
         headers: { 'Authorization': 'Bearer ' + token }
       })
       .then(res => res.json())
@@ -758,7 +758,7 @@
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
-        const res = await fetch('http://localhost:5000/api/users/me', {
+        const res = await fetch('https://agriconnect-4n3i.onrender.com/api/users/me', {
           headers: { 'Authorization': 'Bearer ' + token }
         });
         if (!res.ok) return;

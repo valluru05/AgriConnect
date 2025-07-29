@@ -226,7 +226,7 @@
     async function fetchFarmerCrops() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:5000/api/crops/my', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/crops/my', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const crops = await res.json();
@@ -256,7 +256,7 @@
     async function fetchFarmerOrders() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:5000/api/orders/farmer', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/orders/farmer', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const orders = await res.json();
@@ -326,7 +326,7 @@
         const status = e.target.value;
         const token = localStorage.getItem('token');
         if (!token) return;
-        const res = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
+        const res = await fetch(`https://agriconnect-4n3i.onrender.com/api/orders/${id}/status`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
           body: JSON.stringify({ status })
@@ -365,7 +365,7 @@
       if (photoFile) {
         formData.append('photo', photoFile);
       }
-      const res = await fetch('http://localhost:5000/api/crops', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/crops', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + token },
         body: formData
@@ -382,7 +382,7 @@
     // Add Edit/Delete buttons to crop rows
     function renderCropRow(crop) {
       const lowStock = crop.quantity <= 5;
-      const backendUrl = "http://localhost:5000";
+      const backendUrl = "https://agriconnect-4n3i.onrender.com";
       let photoSrc = (crop.photos && crop.photos[0])
         ? (
             /^(https?:)?\/\//.test(crop.photos[0])
@@ -418,7 +418,7 @@
     async function fetchFarmerCrops() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:5000/api/crops/my', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/crops/my', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const crops = await res.json();
@@ -432,7 +432,7 @@
         const id = e.target.getAttribute('data-id');
         const token = localStorage.getItem('token');
         if (!token) return;
-        fetch(`http://localhost:5000/api/crops/my`, {
+        fetch(`https://agriconnect-4n3i.onrender.com/api/crops/my`, {
           headers: { 'Authorization': 'Bearer ' + token }
         })
         .then(res => res.json())
@@ -471,7 +471,7 @@
         const token = localStorage.getItem('token');
         if (!token) return;
         if (!confirm('Are you sure you want to delete this crop?')) return;
-        fetch(`http://localhost:5000/api/crops/${id}`, {
+        fetch(`https://agriconnect-4n3i.onrender.com/api/crops/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + token }
         }).then(res => {
@@ -508,7 +508,7 @@
       if (photoFile) {
         formData.append('photo', photoFile);
       }
-      const res = await fetch(`http://localhost:5000/api/crops/${id}`, {
+      const res = await fetch(`https://agriconnect-4n3i.onrender.com/api/crops/${id}`, {
         method: 'PUT',
         headers: { 'Authorization': 'Bearer ' + token },
         body: formData
@@ -532,7 +532,7 @@
     profileBtn.onclick = function() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      fetch('http://localhost:5000/api/users/me', {
+      fetch('https://agriconnect-4n3i.onrender.com/api/users/me', {
         headers: { 'Authorization': 'Bearer ' + token }
       })
       .then(res => res.json())
@@ -554,7 +554,7 @@
       const name = document.getElementById('profileName').value;
       const email = document.getElementById('profileEmail').value;
       const password = document.getElementById('profilePassword').value;
-      const res = await fetch('http://localhost:5000/api/users/me', {
+      const res = await fetch('https://agriconnect-4n3i.onrender.com/api/users/me', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ name, email, password: password || undefined })
@@ -570,12 +570,12 @@
       const token = localStorage.getItem('token');
       if (!token) return;
       // Get farmer ID from profile
-      const userRes = await fetch('http://localhost:5000/api/users/me', {
+      const userRes = await fetch('https://agriconnect-4n3i.onrender.com/api/users/me', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const user = await userRes.json();
       const farmerId = user.id || user._id;
-      const res = await fetch(`http://localhost:5000/api/reviews?farmer=${farmerId}`);
+      const res = await fetch(`https://agriconnect-4n3i.onrender.com/api/reviews?farmer=${farmerId}`);
       const reviews = await res.json();
       const reviewsDiv = document.getElementById('farmerReviews');
       if (!reviews.length) {
@@ -616,7 +616,7 @@
         showToast('Please enter a valid amount.', 'bg-red-600');
         return;
       }
-      const res = await fetch(`http://localhost:5000/api/crops/${id}/restock`, {
+      const res = await fetch(`https://agriconnect-4n3i.onrender.com/api/crops/${id}/restock`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ amount })
@@ -636,7 +636,7 @@
         const id = e.target.getAttribute('data-id');
         const token = localStorage.getItem('token');
         if (!token) return;
-        const res = await fetch(`http://localhost:5000/api/orders/${id}/pickup-status`, {
+        const res = await fetch(`https://agriconnect-4n3i.onrender.com/api/orders/${id}/pickup-status`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
           body: JSON.stringify({ pickupStatus: 'Ready' })
@@ -678,7 +678,7 @@
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
-        const res = await fetch('http://localhost:5000/api/users/me', {
+        const res = await fetch('https://agriconnect-4n3i.onrender.com/api/users/me', {
           headers: { 'Authorization': 'Bearer ' + token }
         });
         if (!res.ok) return;
