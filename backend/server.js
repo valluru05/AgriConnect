@@ -42,9 +42,17 @@ app.use('/api/contact', contactRoute);
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 // Root route
 app.get('/', (req, res) => {
   res.send('Welcome to AgriConnect API!');
+});
+
+// For any other routes, serve index.html (for SPA routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // Start server
